@@ -9,13 +9,26 @@
                 <th>Address</th>
                 <th>Phone</th>
                 <th>Email</th>
+                <th>Editing</th>
             </tr>
             <tr v-for="employee in employees" class="employees-list__list-row">
                 <td>{{employee.id}}</td>
-                <td>{{employee.name}}</td>
-                <td>{{employee.address.street}} {{employee.address.suite}} {{employee.address.city}}</td>
-                <td>{{employee.phone}}</td>
-                <td><a :href="`mailto:${ employee.email }`">{{employee.email}}</a></td>
+
+                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.name"> </td> 
+                <td v-else>{{employee.name}}</td>
+
+                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.address.street + employee.address.suite + employee.address.city"></td> 
+                <td v-else>{{employee.address.street}} {{employee.address.suite}} {{employee.address.city}}</td>
+
+                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.phone"></td> 
+                <td v-else>{{employee.phone}}</td>
+
+                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.email"></td> 
+                <td v-else><a :href="`mailto:${ employee.email }`">{{employee.email}}</a></td>
+
+                <td v-if="employee.id === edit"><input type="button" value="save" v-on:click= "save_row(employee.id)"> <input type="button" value="reject" v-on:click= "reject_row(employee.id)"></td>
+                <td v-else><input type="button" value="edit"  v-on:click= "edit_row(employee.id)"></td>
+
             </tr>
         </table>
     </div>
@@ -28,6 +41,7 @@
             return {
                 loading: false,
                 employees: [],
+                edit: -1,
             }
         },
         created () {
@@ -37,6 +51,19 @@
             '$route': 'fetchData'
         },
         methods: {
+            edit_row (a){
+                this.edit = a;
+            },
+
+            save_row (a){
+                this.edit=-1;
+            },
+
+            reject_row (a){
+                this.edit=-1;
+            },
+
+
             fetchData () {
                 this.loading = true;
 
