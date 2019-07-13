@@ -14,16 +14,20 @@
             <tr v-for="employee in employees" class="employees-list__list-row">
                 <td>{{employee.id}}</td>
 
-                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.name"> </td> 
+                <td v-if="employee.id === edit"><input type = "text" name = "name" @input="updateEditElem" v-bind:value="employee.name"> </td> 
                 <td v-else>{{employee.name}}</td>
 
-                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.address.street + employee.address.suite + employee.address.city"></td> 
+                <td v-if="employee.id === edit">
+                    <input type = "text" name = "street" @input="updateEditElem" :value="employee.address.street">
+                    <input type = "text" name = "suite" @input="updateEditElem" :value="employee.address.suite">
+                    <input type = "text" name = "city" @input="updateEditElem" :value="employee.address.city">
+                </td> 
                 <td v-else>{{employee.address.street}} {{employee.address.suite}} {{employee.address.city}}</td>
 
-                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.phone"></td> 
+                <td v-if="employee.id === edit"><input type = "text" name = "phone" @input="updateEditElem" :value="employee.phone"></td> 
                 <td v-else>{{employee.phone}}</td>
 
-                <td v-if="employee.id === edit"><input type="text" v-bind:value="employee.email"></td> 
+                <td v-if="employee.id === edit"><input type= "text" name = "email" @input="updateEditElem" :value="employee.email"></td> 
                 <td v-else><a :href="`mailto:${ employee.email }`">{{employee.email}}</a></td>
 
                 <td v-if="employee.id === edit"><input type="button" value="save" v-on:click= "save_row(employee.id)"> <input type="button" value="reject" v-on:click= "reject_row(employee.id)"></td>
@@ -42,6 +46,7 @@
                 loading: false,
                 employees: [],
                 edit: -1,
+                editedElem: {},
             }
         },
         created () {
@@ -51,12 +56,30 @@
             '$route': 'fetchData'
         },
         methods: {
+            updateEditElem({type, target}){
+                target.name === "street" || target.name === "suite" || target.name === "city" ? this.editedElem.address[target.name] = target.value : this.editedElem[target.name] = target.value ;
+           },
+
             edit_row (a){
                 this.edit = a;
+                this.editedElem = JSON.parse(JSON.stringify(this.employees[a-1]));
             },
 
             save_row (a){
-                this.edit=-1;
+                this.employees[a-1] = this.editedElem;
+               
+                fetch(`https://jsonplaceholder.typicode.com/users/${a}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify(this.employees[a-1]),
+                    headers: {"Content-type": "application/json; charset=UTF-8"}
+                })
+                .then( response => {
+                    this.editedElem = {};
+                    this.edit =-1;
+                    
+                });
+
+                
             },
 
             reject_row (a){
