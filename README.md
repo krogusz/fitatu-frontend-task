@@ -24,5 +24,5 @@ My tasks solution:
 
 2. task #2: Every editing input received name and @input attributes. I also created new object - this.editedElem, which stores changing input's values. During editing user has two buttons available: save and reject. Save button runs save_row method, which gets as input an index of edited row and updates (fetch) the data in API, after that this.edit and this.editedElem are cleaned. Reject button sets up this.edit on -1 (no row is edited).
 
-3. task #4: I created &lt nav &gt tag (which contains menu list) and &l tspan &gt tag (which contains hamburger menu). I created also a new object this.classObject which is responsible for toggling class in \&lt nav &gt tag. Navbar is visible on bigger screen and when hamburger menu is clicked on smaller one (because of onMenuClick method). Hamburger menu is visible only on smaller screen. To get responsivity I used media queries.
+3. task #4: I created \<nav\>  tag (which contains menu list) and \<span\> tag (which contains hamburger menu). I created also a new object this.classObject which is responsible for toggling class in \<nav\> tag. Navbar is visible on bigger screen and when hamburger menu is clicked on smaller one (because of onMenuClick method). Hamburger menu is visible only on smaller screen. To get responsivity I used media queries.
 
